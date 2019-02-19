@@ -17,30 +17,23 @@ pygame.display.set_caption("My Game")
 
 
 def main():
-    r = pygame.Rect(10, 0, 30, 1)
+    r = pygame.Rect(0, 0, 30, 1)
     r.center = (WIDTH/2, HEIGHT/2)
-    eye_right = Eye(r, 2.5, AQUA, True)
+    eye_right = Eye(r, 2.5, AQUA, True, padding=[10, 0, 0, 0])
 
     # Animation 1
-    an = Anim(eye_right, 2, 0, eye_status.setOpen)
-    #an.moveX(30, 1)
-    #an.moveY(40, 1)
-    #an.translate(100, 20, 1)
-    #an.scaleX(2, 1)
-    an.scaleY(28, 1)
-    #an.scale(50, 28, 1)
+    an = Anim(eye_right, 0, 2, eye_status.setOpen)
+    an.scaleY(28, 4)
     eye_right._anim.add_animation_sequence(an)
 
     # Animation 2
-    an2 = Anim(eye_right, 0, 3, eye_status.blink)
+    an2 = Anim(eye_right, 0, 0, eye_status.blink)
     an2.moveX(WIDTH/2+30, 1)
     eye_right._anim.add_animation_sequence(an2)
 
     # Animation 3
     an3 = Anim(eye_right, 0, 0, eye_status.stayOpen)
-    print(WIDTH/2 + 30)
-    print(WIDTH/2 - 40)
-    an3.moveX(WIDTH/2, 1)
+    an3.moveX(30, 1)
     eye_right._anim.add_animation_sequence(an3)
 
 

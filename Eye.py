@@ -10,8 +10,11 @@ eye_status = enum(setOpen=1, stayOpen=2, blink=3, setClose=4, stayClose=5)
 
 
 class Eye:
-    def __init__(self, rect, radius, color, isright):
+    def __init__(self, rect, radius, color, isright, padding=[]):
+        self._padding = padding.copy()
+        # Object Rect
         self._rect = rect
+        # Array
         self._default_rect = [rect[0], rect[1], rect[2], rect[3]]
         self.set_rect(self._rect)
         self._radius = radius
@@ -25,7 +28,7 @@ class Eye:
         self.frame = 0
 
     def set_rect(self, r):
-        self._rect.left = r[0]
+        self._rect.left = r[0] + self._padding[0]
         self._rect.top = r[1]
         self._rect.width = r[2]
         self._rect.height = r[3]
@@ -37,11 +40,11 @@ class Eye:
                     self._anim.get_current_animation()._is_play = False
                     if self._anim.go_next_animation():
                         self._anim.get_current_animation().play()
-                        #print("next animation")
                 else:
                     self._anim.get_current_animation().play()
             elif not self._anim._ended:
                 print("all animation eneded")
             if self._anim.get_current_animation()._is_play:
+                print("C:", self._rect)
                 pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
 
