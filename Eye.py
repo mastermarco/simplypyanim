@@ -11,7 +11,7 @@ eye_status = enum(setOpen=1, stayOpen=2, blink=3, setClose=4, stayClose=5)
 
 class Eye:
     def __init__(self, rect, radius, color, isright, padding=[]):
-        self._padding = padding.copy()
+        self._padding = list(padding)
         # Object Rect
         self._rect = rect
         # Array
