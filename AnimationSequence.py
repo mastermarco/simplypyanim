@@ -21,14 +21,28 @@ class AnimationSequence:
 
     def set_current_animation(self, num):
         self._current_animation = num
+        curranim = self.get_current_animation()
+        curranim.play()
 
     def set_current_animation_by_name(self, name):
+        # it find the animation with name and play till the end
+        curranim = self.get_current_animation()
+        if not curranim is None:
+            curranim.reset()
         i = 0
         for x in self._animation_sequence:
             if x._name == name:
                 self.set_current_animation(i)
                 break
             i += 1
+
+    def set_current_animation_sequence(self, num, end):
+        curranim = self.get_current_animation()
+        if not curranim is None:
+            curranim.reset()
+        #self._current_animation = num
+        self.set_current_animation(num)
+        #print(self._current_animation)
 
     def get_current_animation(self):
         return self._animation_sequence[self._current_animation] if self._current_animation > -1 else None

@@ -15,8 +15,11 @@ class Eye:
         # Object Rect
         self._rect = rect
         # Array
-        self._default_rect = [rect[0], rect[1], rect[2], rect[3]]
-        self.set_rect(self._rect)
+        self._rect.left = rect[0] + self._padding[0]
+        self._rect.top = rect[1]
+        self._rect.width = rect[2]
+        self._rect.height = rect[3]
+        #self.set_rect(self._rect)
         self._radius = radius
         self._color = color
         self._frame = 0
@@ -28,23 +31,21 @@ class Eye:
         self.frame = 0
 
     def set_rect(self, r):
-        self._rect.left = r[0] + self._padding[0]
+        self._rect.left = r[0]
         self._rect.top = r[1]
         self._rect.width = r[2]
         self._rect.height = r[3]
 
     def draw(self):
-        if self._status == eye_status.setOpen:
-            if self._anim.is_play():
-                if self._anim.get_current_animation()._is_ended:
-                    self._anim.get_current_animation()._is_play = False
-                    if self._anim.go_next_animation():
-                        self._anim.get_current_animation().play()
-                else:
-                    self._anim.get_current_animation().play()
-            elif not self._anim._ended:
-                print("all animation eneded")
-            if self._anim.get_current_animation()._is_play:
-                print("C:", self._rect)
-                pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
+        if self._anim.is_play():
+            if self._anim.get_current_animation()._is_ended:
+                self._anim.get_current_animation()._is_play = False
+                #if self._anim.go_next_animation():
+                    #self._anim.get_current_animation().play()
+            else:
+                self._anim.get_current_animation().play()
+
+        if self._anim.get_current_animation()._is_play:
+            print(self._status)
+            pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
 

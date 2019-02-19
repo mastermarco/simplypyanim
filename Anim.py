@@ -24,6 +24,7 @@ class Anim:
         self._scaley = False
         self._scaley_vel = None
         self._scale = False
+        self._stay = False
         self._total_animations = 0
         self._total_animations_backup = 0
 
@@ -31,53 +32,63 @@ class Anim:
         self._obj_rect = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
         self._obj_rect_backup = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
 
+    def reset(self):
+        self._is_ended = True
+        self._is_play = False
+        self.setRect()
+        self._obj.set_rect(self._obj_rect)
+
+    def stay(self):
+        self._stay = True
+
     def play(self):
         if not self._is_ended:
             if self._obj_rect is None:
                 self.setRect()
-                print("A:", self._obj_rect)
+                #print("A:", self._obj_rect)
             self._is_play = True
-            if self._movex and not self._movex_end:
-                if self._movex_vel is None:
-                    self._movex_vel = self._movex_vel_tmp if self._finalX > self._obj._rect[0] else -self._movex_vel_tmp
-                self._obj_rect[0] += self._movex_vel
-                if (self._movex_vel > 0 and self._obj_rect[0] >= self._finalX) or \
-                        (self._movex_vel < 0 and self._obj_rect[0] <= self._finalX):
-                    self._obj_rect[0] = self._finalX
-                    self._total_animations -= 1
-                    self._movex_end = True
-            if self._movey and not self._movey_end:
-                if self._movey_vel is None:
-                    self._movey_vel = self._movey_vel_tmp if self._finalY > self._obj._rect[1] else -self._movey_vel_tmp
-                self._obj_rect[1] += self._movey_vel
-                if (self._movey_vel > 0 and self._obj_rect[1] >= self._finalY) or \
-                        (self._movey_vel < 0 and self._obj_rect[1] <= self._finalY):
-                    self._obj_rect[1] = self._finalY
-                    self._total_animations -= 1
-                    self._movey_end = True
-            if self._scalex and not self._scalex_end:
-                if self._scalex_vel is None:
-                    self._scalex_vel = self._scalex_vel_tmp if self._finalScaleX > self._obj._rect[2] else -self._scalex_vel_tmp
-                self._obj_rect[2] += self._scalex_vel
-                self._obj_rect[0] -= self._scalex_vel/2
-                if (self._scalex_vel > 0 and self._obj_rect[2] >= self._finalScaleX) or \
-                        (self._scalex_vel < 0 and self._obj_rect[2] <= self._finalScaleX):
-                    self._obj_rect[2] = self._finalScaleX
-                    self._total_animations -= 1
-                    self._scalex_end = True
-            if self._scaley and not self._scaley_end:
-                if self._scaley_vel is None:
-                    self._scaley_vel = self._scaley_vel_tmp if self._finalScaleY > self._obj._rect[3] else -self._scaley_vel_tmp
-                self._obj_rect[3] += self._scaley_vel
-                self._obj_rect[1] -= self._scaley_vel/2
-                if (self._scaley_vel > 0 and self._obj_rect[3] >= self._finalScaleY) or \
-                        (self._scaley_vel < 0 and self._obj_rect[3] <= self._finalScaleY):
-                    self._obj_rect[3] = self._finalScaleY
-                    self._total_animations -= 1
-                    self._scaley_end = True
-            print("B:", self._obj_rect)
+            if not self._stay:
+                if self._movex and not self._movex_end:
+                    if self._movex_vel is None:
+                        self._movex_vel = self._movex_vel_tmp if self._finalX > self._obj._rect[0] else -self._movex_vel_tmp
+                    self._obj_rect[0] += self._movex_vel
+                    if (self._movex_vel > 0 and self._obj_rect[0] >= self._finalX) or \
+                            (self._movex_vel < 0 and self._obj_rect[0] <= self._finalX):
+                        self._obj_rect[0] = self._finalX
+                        self._total_animations -= 1
+                        self._movex_end = True
+                if self._movey and not self._movey_end:
+                    if self._movey_vel is None:
+                        self._movey_vel = self._movey_vel_tmp if self._finalY > self._obj._rect[1] else -self._movey_vel_tmp
+                    self._obj_rect[1] += self._movey_vel
+                    if (self._movey_vel > 0 and self._obj_rect[1] >= self._finalY) or \
+                            (self._movey_vel < 0 and self._obj_rect[1] <= self._finalY):
+                        self._obj_rect[1] = self._finalY
+                        self._total_animations -= 1
+                        self._movey_end = True
+                if self._scalex and not self._scalex_end:
+                    if self._scalex_vel is None:
+                        self._scalex_vel = self._scalex_vel_tmp if self._finalScaleX > self._obj._rect[2] else -self._scalex_vel_tmp
+                    self._obj_rect[2] += self._scalex_vel
+                    self._obj_rect[0] -= self._scalex_vel/2
+                    if (self._scalex_vel > 0 and self._obj_rect[2] >= self._finalScaleX) or \
+                            (self._scalex_vel < 0 and self._obj_rect[2] <= self._finalScaleX):
+                        self._obj_rect[2] = self._finalScaleX
+                        self._total_animations -= 1
+                        self._scalex_end = True
+                if self._scaley and not self._scaley_end:
+                    if self._scaley_vel is None:
+                        self._scaley_vel = self._scaley_vel_tmp if self._finalScaleY > self._obj._rect[3] else -self._scaley_vel_tmp
+                    self._obj_rect[3] += self._scaley_vel
+                    self._obj_rect[1] -= self._scaley_vel/2
+                    if (self._scaley_vel > 0 and self._obj_rect[3] >= self._finalScaleY) or \
+                            (self._scaley_vel < 0 and self._obj_rect[3] <= self._finalScaleY):
+                        self._obj_rect[3] = self._finalScaleY
+                        self._total_animations -= 1
+                        self._scaley_end = True
+            #print("B:", self._obj_rect)
             self._obj.set_rect(self._obj_rect)
-        if self._total_animations == 0:
+        if self._total_animations == 0 and not self._stay:
             # handle if need to wait or loop or it's ended
             if not self._is_ended and self._wait > 0 and self._wait_steps == 0:
                 self._wait_steps = datetime.now()
