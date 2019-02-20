@@ -3,6 +3,8 @@ class AnimationSequence:
         self._animation_sequence = []
         self._current_animation = -1
         self._ended = False
+        self._animation_sequence_array = []
+        self._animation_sequence_array_index = -1
 
     def add_animation_sequence(self, anim):
         self._animation_sequence.append(anim)
@@ -15,6 +17,11 @@ class AnimationSequence:
             self._current_animation = 0
             self._ended = False
             return False
+
+    def go_next_animation_sequence(self):
+        if self._animation_sequence_array_index + 1 < len(self._animation_sequence_array):
+            self._animation_sequence_array_index += 1
+            self.set_current_animation(self._animation_sequence_array[self._animation_sequence_array_index])
 
     def rewind_animation(self):
         return self._current_animation
@@ -36,13 +43,23 @@ class AnimationSequence:
                 break
             i += 1
 
-    def set_current_animation_sequence(self, num, end):
+    def set_current_animation_sequence(self, lst):
         curranim = self.get_current_animation()
         if not curranim is None:
             curranim.reset()
         #self._current_animation = num
-        self.set_current_animation(num)
+        #self.set_current_animation(num)
         #print(self._current_animation)
+        self._animation_sequence_array = list(lst)
+        self._animation_sequence_array_index = 0
+        self.set_current_animation(lst[self._animation_sequence_array_index])
+
+    def handle_next_animation(self):
+        if self.go_next_animation_sequence():
+            an = self.get_current_animation()
+            if not an is None:
+                an.play()
+
 
     def get_current_animation(self):
         return self._animation_sequence[self._current_animation] if self._current_animation > -1 else None

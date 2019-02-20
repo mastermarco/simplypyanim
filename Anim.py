@@ -14,17 +14,37 @@ class Anim:
         self._is_play = False
         self._is_ended = False
         self._name = name
+
         self._movex = False
         self._movex_vel = None
+        self._finalX = None
+        self._movex_end = None
+        self._movex_vel_tmp = None
+
         self._movey = False
         self._movey_vel = None
+        self._finalY = None
+        self._movey_end = None
+        self._movey_vel_tmp = None
+
         self._translate = False
+
         self._scalex = False
         self._scalex_vel = None
+        self._finalScaleX = None
+        self._scalex_end = None
+        self._scalex_vel_tmp = None
+
         self._scaley = False
         self._scaley_vel = None
+        self._finalScaleY = None
+        self._scaley_end = None
+        self._scaley_vel_tmp = None
+
         self._scale = False
+
         self._stay = False
+
         self._total_animations = 0
         self._total_animations_backup = 0
 
@@ -33,10 +53,11 @@ class Anim:
         self._obj_rect_backup = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
 
     def reset(self):
-        self._is_ended = True
+        self._is_ended = False
         self._is_play = False
         self.setRect()
         self._obj.set_rect(self._obj_rect)
+        self.resetAnim()
 
     def stay(self):
         self._stay = True
@@ -86,7 +107,8 @@ class Anim:
                         self._obj_rect[3] = self._finalScaleY
                         self._total_animations -= 1
                         self._scaley_end = True
-            #print("B:", self._obj_rect)
+            else:
+                print("stay")
             self._obj.set_rect(self._obj_rect)
         if self._total_animations == 0 and not self._stay:
             # handle if need to wait or loop or it's ended
@@ -126,6 +148,15 @@ class Anim:
         self._movey_end = False
         self._scalex_end = False
         self._scaley_end = False
+        self._stay = False
+        if not self._finalX is None:
+            self.moveX(self._finalX, self._movex_vel_tmp)
+        if not self._finalY is None:
+            self.moveY(self._finalY, self._movey_vel_tmp)
+        if not self._finalScaleX is None:
+            self.scaleX(self._finalScaleX, self._scalex_vel_tmp)
+        if not self._finalScaleY is None:
+            self.scaleY(self._finalScaleY, self._scaley_vel_tmp)
 
     def moveX(self, finalX, vel):
         self._movex = True

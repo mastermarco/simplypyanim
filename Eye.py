@@ -39,13 +39,12 @@ class Eye:
     def draw(self):
         if self._anim.is_play():
             if self._anim.get_current_animation()._is_ended:
-                self._anim.get_current_animation()._is_play = False
-                #if self._anim.go_next_animation():
-                    #self._anim.get_current_animation().play()
+                #self._anim.get_current_animation()._is_play = False
+                self._anim.handle_next_animation()
             else:
                 self._anim.get_current_animation().play()
+        else:
+            self._anim.handle_next_animation()
 
-        if self._anim.get_current_animation()._is_play:
-            print(self._status)
-            pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
+        pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
 

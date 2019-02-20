@@ -22,8 +22,9 @@ eye_right = None
 def make_blink():
     global eye_right
     if not eye_right is None:
-        eye_right._anim.set_current_animation_sequence(1, 5)
+        eye_right._anim.set_current_animation_sequence([1, 2, 3, 4, 5])
         eye_right._status = eye_status.blink
+        print(eye_right._anim.get_current_animation())
         eye_right._anim.get_current_animation().play()
         print("blinking")
 
@@ -66,7 +67,12 @@ def main():
     interval = Interval(5, make_blink, args=[])
     interval.start()
 
-    eye_right._anim.set_current_animation_by_name(eye_status.setOpen)
+    #eye_right._anim.set_current_animation_by_name(eye_status.setOpen)
+
+    eye_right._anim.set_current_animation_sequence([0, 1, 2, 3, 4, 5])
+    #eye_right._status = eye_status.blink
+    eye_right._anim.get_current_animation().play()
+
     #eye_right._anim.get_current_animation().play()
 
     fps = ""
