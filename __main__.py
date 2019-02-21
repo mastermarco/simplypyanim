@@ -1,4 +1,5 @@
 import pygame
+import os
 from pygame import *
 from Config import *
 
@@ -24,6 +25,7 @@ eye_right = None
 def make_blink():
     global eye_right
     if not eye_right is None:
+        os.system('cls' if os.name == 'nt' else "printf '\033c'")
         print("blinking")
         eye_right._anim.set_current_animation_sequence([1, 2, 3, 4, 5])
         eye_right._status = eye_status.setOpen
@@ -37,32 +39,32 @@ def main():
     r_def = pygame.Rect(r.left, r.top, 30, 28)
     eye_right = Eye(r, 2.5, AQUA, True, padding=[20, 0, 0, 0])
 
-    # Animation 1
+    # Animation 0
     an = Anim(eye_right, 0, 2, "set open", r_def)  # eye_status.setOpen
     an.scaleY(28, 4)
     eye_right._anim.add_animation_sequence(an)
 
-    # Animation 2
+    # Animation 1
     an = Anim(eye_right, 0, 0, "scale Y down 1", r_def)  # Openeye_status.blink
     an.scaleY(2, 4)
     eye_right._anim.add_animation_sequence(an)
 
-    # Animation 3
+    # Animation 2
     an = Anim(eye_right, 0, 0, "scale Y up 2", r_def)
     an.scaleY(28, 4)
     eye_right._anim.add_animation_sequence(an)
 
-    # Animation 4
+    # Animation 3
     an = Anim(eye_right, 0, 0, "scale Y down 3", r_def)
     an.scaleY(2, 4)
     eye_right._anim.add_animation_sequence(an)
 
-    # Animation 5
+    # Animation 4
     an = Anim(eye_right, 0, 0, "scale Y up 4", r_def)
     an.scaleY(28, 4)
     eye_right._anim.add_animation_sequence(an)
 
-    # Animation 6
+    # Animation 5
     an = Anim(eye_right, 0, 0, "stay open", r_def)  # eye_status.stayOpen
     an.stay()
     eye_right._anim.add_animation_sequence(an)
@@ -70,13 +72,8 @@ def main():
     interval = Interval(5, make_blink, args=[])
     interval.start()
 
-    #eye_right._anim.set_current_animation_by_name(eye_status.setOpen)
-
     eye_right._anim.set_current_animation_sequence([0, 1, 2, 3, 4, 5])
-    #eye_right._status = eye_status.blink
     eye_right._anim.get_current_animation().play()
-
-    #eye_right._anim.get_current_animation().play()
 
     fps = ""
     #canvas = luma.core.render.canvas(screen)

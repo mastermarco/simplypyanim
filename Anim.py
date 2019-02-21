@@ -50,14 +50,7 @@ class Anim:
         self._total_animations = 0
         self._total_animations_backup = 0
 
-    def setRect(self):
-        self._obj_rect = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
-        self._obj_rect_backup = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
-
     def play(self):
-        if self._name == "scale Y down 1":
-            print("da verificare se ferma: ", self._is_ended, self._is_play, self._stay)
-            print(self._scaley, self._scaley_end, self._scaley_vel, self._scaley_vel_tmp, self._finalScaleY)
         if not self._is_ended:
             if self._obj_rect is None:
                 self.setRect()
@@ -94,17 +87,15 @@ class Anim:
                 if self._scaley and not self._scaley_end:
                     if self._scaley_vel is None:
                         self._scaley_vel = self._scaley_vel_tmp if self._finalScaleY > self._obj._rect[3] else -self._scaley_vel_tmp
-                        print("self._scaley_vel was None now is:", self._scaley_vel)
                     self._obj_rect[3] += self._scaley_vel
                     self._obj_rect[1] -= self._scaley_vel/2
-                    #print(self._name, self._scaley_vel, self._obj_rect[3], self._finalScaleY, self._obj_rect[1])
 
                     if (self._scaley_vel > 0 and self._obj_rect[3] >= self._finalScaleY) or \
                             (self._scaley_vel < 0 and self._obj_rect[3] <= self._finalScaleY):
                         self._obj_rect[3] = self._finalScaleY
                         self._total_animations -= 1
                         self._scaley_end = True
-                    print("-->", self._obj_rect)
+                    print(self._obj_rect, self._name)
             #else:
                 #print("stay")
             self._obj.set_rect(self._obj_rect)
@@ -127,14 +118,13 @@ class Anim:
 
     def endAnimation(self):
         self._is_ended = True
-        #self._total_animations = self._total_animations_backup = 0
+        self._total_animations = self._total_animations_backup = 0
         self._wait_step = 0
         self._waiting = False
         self._end_wait = False
         self._loops_step = 0
-        self.resetRect()
 
-    def resetAnim(self):
+    def resetAnim(self, holdon=False):
         self._total_animations = self._total_animations_backup = 0
         self._movex_vel = None
         self._movey_vel = None
@@ -145,8 +135,8 @@ class Anim:
         self._scalex_end = False
         self._scaley_end = False
         self._stay = self._stay_backup
-        self._is_ended = False
-        self._is_play = False
+        self._is_ended = not holdon
+        #self._is_play = False
         if not self._finalX is None:
             self.moveX(self._finalX, self._movex_vel_tmp)
         if not self._finalY is None:
@@ -157,13 +147,9 @@ class Anim:
             self.scaleY(self._finalScaleY, self._scaley_vel_tmp)
             #print("pippo")
 
-    def reset(self):
-        self._is_ended = False
-        self._is_play = False
-        self._stay = self._stay_backup = False
-        self.setRect()
-        self._obj.set_rect(self._obj_rect)
-        self.resetAnim()
+    def setRect(self):
+        self._obj_rect = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
+        self._obj_rect_backup = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
 
     def resetRect(self):
         self._obj_rect = [self._obj_rect_default.left, self._obj_rect_default.top, self._obj_rect_default.width, self._obj_rect_default.height]
