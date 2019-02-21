@@ -39,7 +39,6 @@ class Eye:
     def draw(self):
         if self._anim.is_play():
             if self._anim.get_current_animation()._is_ended:
-                #self._anim.get_current_animation()._is_play = False
                 self._anim.handle_next_animation()
             else:
                 self._anim.get_current_animation().play()

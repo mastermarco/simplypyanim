@@ -7,6 +7,8 @@ from Colors import *
 from Eye import *
 from Anim import *
 
+from pprint import pprint
+
 pygame.init()
 clock = pygame.time.Clock()
 
@@ -14,7 +16,7 @@ clock = pygame.time.Clock()
 size = (WIDTH, HEIGHT)
 screen = pygame.display.set_mode(size)
 
-pygame.display.set_caption("My Game")
+#pygame.display.set_caption("My Game")
 
 eye_right = None
 
@@ -22,45 +24,46 @@ eye_right = None
 def make_blink():
     global eye_right
     if not eye_right is None:
-        eye_right._anim.set_current_animation_sequence([1, 2, 3, 4, 5])
-        eye_right._status = eye_status.blink
-        print(eye_right._anim.get_current_animation())
-        eye_right._anim.get_current_animation().play()
         print("blinking")
+        eye_right._anim.set_current_animation_sequence([1, 2, 3, 4, 5])
+        eye_right._status = eye_status.setOpen
+        #pprint(vars(eye_right._anim.get_current_animation()), indent=2)
+        eye_right._anim.get_current_animation().play()
 
 def main():
     global eye_right
     r = pygame.Rect(0, 0, 30, 1)
     r.center = (WIDTH/2, HEIGHT/2)
+    r_def = pygame.Rect(r.left, r.top, 30, 28)
     eye_right = Eye(r, 2.5, AQUA, True, padding=[20, 0, 0, 0])
 
     # Animation 1
-    an = Anim(eye_right, 0, 2, eye_status.setOpen)
+    an = Anim(eye_right, 0, 2, "set open", r_def)  # eye_status.setOpen
     an.scaleY(28, 4)
     eye_right._anim.add_animation_sequence(an)
 
     # Animation 2
-    an = Anim(eye_right, 0, 0, eye_status.blink)
+    an = Anim(eye_right, 0, 0, "scale Y down 1", r_def)  # Openeye_status.blink
     an.scaleY(2, 4)
     eye_right._anim.add_animation_sequence(an)
 
     # Animation 3
-    an = Anim(eye_right, 0, 0, eye_status.blink)
+    an = Anim(eye_right, 0, 0, "scale Y up 2", r_def)
     an.scaleY(28, 4)
     eye_right._anim.add_animation_sequence(an)
 
     # Animation 4
-    an = Anim(eye_right, 0, 0, eye_status.blink)
+    an = Anim(eye_right, 0, 0, "scale Y down 3", r_def)
     an.scaleY(2, 4)
     eye_right._anim.add_animation_sequence(an)
 
     # Animation 5
-    an = Anim(eye_right, 0, 0, eye_status.blink)
+    an = Anim(eye_right, 0, 0, "scale Y up 4", r_def)
     an.scaleY(28, 4)
     eye_right._anim.add_animation_sequence(an)
 
     # Animation 6
-    an = Anim(eye_right, 0, 0, eye_status.stayOpen)
+    an = Anim(eye_right, 0, 0, "stay open", r_def)  # eye_status.stayOpen
     an.stay()
     eye_right._anim.add_animation_sequence(an)
 

@@ -1,10 +1,11 @@
 from datetime import datetime
 
 class Anim:
-    def __init__(self, obj, loops, wait, name, on_end=""):
+    def __init__(self, obj, loops, wait, name, rect, on_end="", ):
         self._obj = obj
         self._obj_rect = None
         self._obj_rect_backup = None
+        self._obj_rect_default = rect
         self._loops = loops
         self._loops_step = 0
         self._wait = wait * 1000
@@ -44,6 +45,7 @@ class Anim:
         self._scale = False
 
         self._stay = False
+        self._stay_backup = None
 
         self._total_animations = 0
         self._total_animations_backup = 0
@@ -52,21 +54,13 @@ class Anim:
         self._obj_rect = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
         self._obj_rect_backup = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
 
-    def reset(self):
-        self._is_ended = False
-        self._is_play = False
-        self.setRect()
-        self._obj.set_rect(self._obj_rect)
-        self.resetAnim()
-
-    def stay(self):
-        self._stay = True
-
     def play(self):
+        if self._name == "scale Y down 1":
+            print("da verificare se ferma: ", self._is_ended, self._is_play, self._stay)
+            print(self._scaley, self._scaley_end, self._scaley_vel, self._scaley_vel_tmp, self._finalScaleY)
         if not self._is_ended:
             if self._obj_rect is None:
                 self.setRect()
-                #print("A:", self._obj_rect)
             self._is_play = True
             if not self._stay:
                 if self._movex and not self._movex_end:
@@ -100,15 +94,19 @@ class Anim:
                 if self._scaley and not self._scaley_end:
                     if self._scaley_vel is None:
                         self._scaley_vel = self._scaley_vel_tmp if self._finalScaleY > self._obj._rect[3] else -self._scaley_vel_tmp
+                        print("self._scaley_vel was None now is:", self._scaley_vel)
                     self._obj_rect[3] += self._scaley_vel
                     self._obj_rect[1] -= self._scaley_vel/2
+                    #print(self._name, self._scaley_vel, self._obj_rect[3], self._finalScaleY, self._obj_rect[1])
+
                     if (self._scaley_vel > 0 and self._obj_rect[3] >= self._finalScaleY) or \
                             (self._scaley_vel < 0 and self._obj_rect[3] <= self._finalScaleY):
                         self._obj_rect[3] = self._finalScaleY
                         self._total_animations -= 1
                         self._scaley_end = True
-            else:
-                print("stay")
+                    print("-->", self._obj_rect)
+            #else:
+                #print("stay")
             self._obj.set_rect(self._obj_rect)
         if self._total_animations == 0 and not self._stay:
             # handle if need to wait or loop or it's ended
@@ -124,31 +122,31 @@ class Anim:
                 self.resetObj()
                 self.resetAnim()
             else:
-                self._wait_step = 0
-                self._waiting = False
-                self._end_wait = False
-                self._loops_step = 0
-                self._is_ended = True
+                self.endAnimation()
+                self.resetAnim()
 
-    def millis(self):
-        dt = datetime.now() - self._wait_steps
-        ms = int((dt.days * 24 * 60 * 60 + dt.seconds) * 1000 + dt.microseconds / 1000)
-        return ms
-
-    def resetObj(self):
-        self._obj.set_rect(self._obj_rect_backup)
-        self._obj_rect[0] = self._obj_rect_backup[0]
-        self._obj_rect[1] = self._obj_rect_backup[1]
-        self._obj_rect[2] = self._obj_rect_backup[2]
-        self._obj_rect[3] = self._obj_rect_backup[3]
+    def endAnimation(self):
+        self._is_ended = True
+        #self._total_animations = self._total_animations_backup = 0
+        self._wait_step = 0
+        self._waiting = False
+        self._end_wait = False
+        self._loops_step = 0
+        self.resetRect()
 
     def resetAnim(self):
-        self._total_animations = self._total_animations_backup
+        self._total_animations = self._total_animations_backup = 0
+        self._movex_vel = None
+        self._movey_vel = None
+        self._scalex_vel = None
+        self._scaley_vel = None
         self._movex_end = False
         self._movey_end = False
         self._scalex_end = False
         self._scaley_end = False
-        self._stay = False
+        self._stay = self._stay_backup
+        self._is_ended = False
+        self._is_play = False
         if not self._finalX is None:
             self.moveX(self._finalX, self._movex_vel_tmp)
         if not self._finalY is None:
@@ -157,6 +155,31 @@ class Anim:
             self.scaleX(self._finalScaleX, self._scalex_vel_tmp)
         if not self._finalScaleY is None:
             self.scaleY(self._finalScaleY, self._scaley_vel_tmp)
+            #print("pippo")
+
+    def reset(self):
+        self._is_ended = False
+        self._is_play = False
+        self._stay = self._stay_backup = False
+        self.setRect()
+        self._obj.set_rect(self._obj_rect)
+        self.resetAnim()
+
+    def resetRect(self):
+        self._obj_rect = [self._obj_rect_default.left, self._obj_rect_default.top, self._obj_rect_default.width, self._obj_rect_default.height]
+        self.setRect()
+
+    def resetObj(self):
+        self._obj.set_rect(self._obj_rect_backup)
+        self._obj_rect[0] = self._obj_rect_backup[0]
+        self._obj_rect[1] = self._obj_rect_backup[1]
+        self._obj_rect[2] = self._obj_rect_backup[2]
+        self._obj_rect[3] = self._obj_rect_backup[3]
+
+    def millis(self):
+        dt = datetime.now() - self._wait_steps
+        ms = int((dt.days * 24 * 60 * 60 + dt.seconds) * 1000 + dt.microseconds / 1000)
+        return ms
 
     def moveX(self, finalX, vel):
         self._movex = True
@@ -197,3 +220,7 @@ class Anim:
     def scale(self, finalSizeX, finalSizeY, vel):
         self.scaleX(finalSizeX, vel)
         self.scaleY(finalSizeY, vel)
+
+    def stay(self):
+        self._stay = self._stay_backup = True
+

@@ -1,3 +1,6 @@
+from pprint import pprint
+
+
 class AnimationSequence:
     def __init__(self):
         self._animation_sequence = []
@@ -46,20 +49,20 @@ class AnimationSequence:
     def set_current_animation_sequence(self, lst):
         curranim = self.get_current_animation()
         if not curranim is None:
-            curranim.reset()
-        #self._current_animation = num
-        #self.set_current_animation(num)
-        #print(self._current_animation)
+            curranim.endAnimation()
+            curranim.resetAnim()
+
         self._animation_sequence_array = list(lst)
         self._animation_sequence_array_index = 0
         self.set_current_animation(lst[self._animation_sequence_array_index])
+        curranim = self.get_current_animation()
+        #pprint(vars(curranim), indent=2)
 
     def handle_next_animation(self):
         if self.go_next_animation_sequence():
             an = self.get_current_animation()
             if not an is None:
                 an.play()
-
 
     def get_current_animation(self):
         return self._animation_sequence[self._current_animation] if self._current_animation > -1 else None
