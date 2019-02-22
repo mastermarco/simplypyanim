@@ -40,6 +40,7 @@ class Interval(object):
         """
         if self._timer:
             self._timer.cancel()
+
         self.running = False
         self._timer = None
 

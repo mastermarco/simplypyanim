@@ -1,10 +1,12 @@
 from datetime import datetime
 
+
 class Anim:
-    def __init__(self, obj, loops, wait, name, rect, on_end="", ):
+    def __init__(self, obj, loops, wait, name, rect, shape="rect", on_start={}, on_end={}):
+        self._shape = shape
         self._obj = obj
         self._obj_rect = None
-        self._obj_rect_backup = rect
+        self._obj_rect_backup = None
         self._loops = loops
         self._loops_step = 0
         self._wait = wait * 1000
@@ -49,10 +51,14 @@ class Anim:
         self._total_animations = 0
         self._total_animations_backup = 0
 
+        self._on_start = dict(on_start)
+        self._on_end = dict(on_end)
+
     def play(self):
         if not self._is_ended:
             if self._obj_rect is None:
                 self.resetRect()
+                self.onStart()
             self._is_play = True
             if not self._stay:
                 if self._movex and not self._movex_end:
@@ -94,7 +100,6 @@ class Anim:
                         self._obj_rect[3] = self._finalScaleY
                         self._total_animations -= 1
                         self._scaley_end = True
-                    print(self._obj_rect, self._name)
             #else:
                 #print("stay")
             self._obj.set_rect(self._obj_rect)
@@ -115,6 +120,11 @@ class Anim:
                 self.endAnimation()
                 self.resetAnim()
 
+    def onStart(self):
+        if len(self._on_start):
+            for x in self._on_start:
+                setattr(self._obj, x, self._on_start[x])
+
     def endAnimation(self):
         self._obj_rect = None
         self._is_ended = True
@@ -123,6 +133,9 @@ class Anim:
         self._waiting = False
         self._end_wait = False
         self._loops_step = 0
+        if len(self._on_end):
+            for x in self._on_end:
+                setattr(self._obj, x, self._on_end[x])
 
     def resetAnim(self, holdon=False):
         self._total_animations = self._total_animations_backup = 0
@@ -145,30 +158,15 @@ class Anim:
             self.scaleX(self._finalScaleX, self._scalex_vel_tmp)
         if not self._finalScaleY is None:
             self.scaleY(self._finalScaleY, self._scaley_vel_tmp)
-            #print("pippo")
 
     def resetRect(self):
         self._obj_rect = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
-        """
-        self._obj_rect = [self._obj_rect_default.left, self._obj_rect_default.top, self._obj_rect_default.width, self._obj_rect_default.height]
-        self._obj_rect_backup = [self._obj_rect_default.left, self._obj_rect_default.top, self._obj_rect_default.width, self._obj_rect_default.height]
-
-        self._obj._rect[0] = self._obj_rect_backup[0]
-        self._obj._rect[1] = self._obj_rect_backup[1]
-        self._obj._rect[2] = self._obj_rect_backup[2]
-        self._obj._rect[3] = self._obj_rect_backup[3]
-
-        print(self._name)
-        print("----->", self._obj_rect_default)
-        print("----->", self._obj_rect)
-        print("----->", self._obj_rect_backup)
-        print("----->", self._obj._rect)
-        """
+        self._obj_rect_backup = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
 
     def resetObj(self):
-        # TODO used for loop so it need to reset the original rect
+        # used for loop so it need to reset the original rect
         # this happen during the play when self._obj_rect is None
-        self._obj.set_rect(self._obj_rect_backup)
+        # self._obj.set_rect(self._obj_rect_backup)
         self._obj_rect[0] = self._obj_rect_backup[0]
         self._obj_rect[1] = self._obj_rect_backup[1]
         self._obj_rect[2] = self._obj_rect_backup[2]
