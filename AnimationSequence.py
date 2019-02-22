@@ -12,23 +12,6 @@ class AnimationSequence:
     def add_animation_sequence(self, anim):
         self._animation_sequence.append(anim)
 
-    def go_next_animation(self):
-        if self._current_animation + 1 < len(self._animation_sequence):
-            self.set_current_animation(self._current_animation + 1)
-            return True
-        else:
-            self._current_animation = 0
-            self._ended = False
-            return False
-
-    def go_next_animation_sequence(self):
-        if self._animation_sequence_array_index + 1 < len(self._animation_sequence_array):
-            self._animation_sequence_array_index += 1
-            self.set_current_animation(self._animation_sequence_array[self._animation_sequence_array_index])
-            return True
-        else:
-            return False
-
     def rewind_animation(self):
         return self._current_animation
 
@@ -58,9 +41,8 @@ class AnimationSequence:
         self.set_current_animation(lst[self._animation_sequence_array_index])
         curranim = self.get_current_animation()
         #print("_obj_rect_default", curranim._obj_rect_default)
-        curranim._obj_rect = curranim._obj_rect_default
-        curranim._obj_rect_backup = [curranim._obj._rect.left, curranim._obj._rect.top, curranim._obj._rect.width, curranim._obj._rect.height]
-
+        #curranim._obj_rect = curranim._obj_rect_default
+        #curranim._obj_rect_backup = [curranim._obj._rect.left, curranim._obj._rect.top, curranim._obj._rect.width, curranim._obj._rect.height]
         curranim._is_ended = False
         curranim.resetRect()
         #pprint(vars(curranim), indent=2)
@@ -74,7 +56,25 @@ class AnimationSequence:
             an = self.get_current_animation()
             if not an is None:
                 an._is_ended = False
+                #an.resetRect()
                 an.play()
+
+    def go_next_animation(self):
+        if self._current_animation + 1 < len(self._animation_sequence):
+            self.set_current_animation(self._current_animation + 1)
+            return True
+        else:
+            self._current_animation = 0
+            self._ended = False
+            return False
+
+    def go_next_animation_sequence(self):
+        if self._animation_sequence_array_index + 1 < len(self._animation_sequence_array):
+            self._animation_sequence_array_index += 1
+            self.set_current_animation(self._animation_sequence_array[self._animation_sequence_array_index])
+            return True
+        else:
+            return False
 
     def get_current_animation(self):
         return self._animation_sequence[self._current_animation] if self._current_animation > -1 else None

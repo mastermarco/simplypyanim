@@ -36,35 +36,40 @@ def main():
     global eye_right
     r = pygame.Rect(0, 0, 30, 1)
     r.center = (WIDTH/2, HEIGHT/2)
-    r_def = pygame.Rect(r.left, r.top, 30, 28)
     eye_right = Eye(r, 2.5, AQUA, True, padding=[20, 0, 0, 0])
 
     # Animation 0
+    r_def = pygame.Rect(r.left, r.top, 30, 2)
     an = Anim(eye_right, 0, 2, "set open", r_def)  # eye_status.setOpen
     an.scaleY(28, 4)
     eye_right._anim.add_animation_sequence(an)
 
     # Animation 1
+    r_def = pygame.Rect(r.left, r.top, 30, 28)
     an = Anim(eye_right, 0, 0, "scale Y down 1", r_def)  # Openeye_status.blink
     an.scaleY(2, 4)
     eye_right._anim.add_animation_sequence(an)
 
     # Animation 2
+    r_def = pygame.Rect(r.left, r.top, 30, 2)
     an = Anim(eye_right, 0, 0, "scale Y up 2", r_def)
     an.scaleY(28, 4)
     eye_right._anim.add_animation_sequence(an)
 
     # Animation 3
+    r_def = pygame.Rect(r.left, r.top, 30, 28)
     an = Anim(eye_right, 0, 0, "scale Y down 3", r_def)
     an.scaleY(2, 4)
     eye_right._anim.add_animation_sequence(an)
 
     # Animation 4
+    r_def = pygame.Rect(r.left, r.top, 30, 2)
     an = Anim(eye_right, 0, 0, "scale Y up 4", r_def)
     an.scaleY(28, 4)
     eye_right._anim.add_animation_sequence(an)
 
     # Animation 5
+    r_def = pygame.Rect(r.left, r.top, 30, 28)
     an = Anim(eye_right, 0, 0, "stay open", r_def)  # eye_status.stayOpen
     an.stay()
     eye_right._anim.add_animation_sequence(an)
