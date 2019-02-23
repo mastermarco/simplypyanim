@@ -1,12 +1,16 @@
 from datetime import datetime
-
+from Config import *
 
 class Anim:
-    def __init__(self, obj, loops, wait, name, rect, shape="rect", on_start={}, on_end={}):
+    def __init__(self, obj, loops, wait, name, rect, shape="rect", text="", on_start={}, on_end={}, text_color=""):
         self._shape = shape
+        self._text = text
+        self._textsurface = None
+        self._text_color = text_color
         self._obj = obj
         self._obj_rect = None
         self._obj_rect_backup = None
+        self._text_rect = list(rect)
         self._loops = loops
         self._loops_step = 0
         self._wait = wait * 1000
@@ -160,8 +164,19 @@ class Anim:
             self.scaleY(self._finalScaleY, self._scaley_vel_tmp)
 
     def resetRect(self):
-        self._obj_rect = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
-        self._obj_rect_backup = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
+        if self._shape == "rect":
+            self._obj_rect = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
+            self._obj_rect_backup = list(self._obj_rect)
+        elif self._shape == "text":
+            self._textsurface = self._obj._font.render(self._text, False, self._text_color)
+            print(self._textsurface.get_width(), self._textsurface.get_height())
+            self._obj_rect_backup = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
+            self._obj._rect.left = self._text_rect[0]
+            self._obj._rect.top = self._text_rect[1]
+            self._obj._rect.width = self._textsurface.get_width()
+            self._obj._rect.height = self._textsurface.get_height()
+            self._obj_rect = [self._text_rect[0], self._text_rect[1], self._textsurface.get_width(), self._textsurface.get_height()]
+
 
     def resetObj(self):
         # used for loop so it need to reset the original rect
