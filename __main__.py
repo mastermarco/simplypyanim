@@ -9,7 +9,12 @@ from Eye import *
 
 from pprint import pprint
 
+
+os.putenv('SDL_FBDEV', '/dev/fb1')
+pygame.mouse.set_visible(False)
 pygame.init()
+pygame.display.update()
+
 pygame.font.init()
 clock = pygame.time.Clock()
 
