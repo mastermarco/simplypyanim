@@ -30,12 +30,16 @@ class Eye:
         self._anim = AnimationSequence()
         self._status = status
         self._interval = None
-        self.set_up_animations()
         self._visible = True
-        self._font = pygame.font.SysFont('Comic Sans MS', 20)
+        self._font = self.set_font_size(1)
+
+        self.set_up_animations()
 
     def start_new_animation(self):
         self.frame = 0
+
+    def set_font_size(self, fntsize):
+        return pygame.font.SysFont('Comic Sans MS', fntsize)
 
     def set_rect(self, r):
         self._rect.left = r[0]
@@ -88,9 +92,10 @@ class Eye:
         self._anim.add_animation_sequence(an)
 
         # Animation 8
+        r_def = None
         r_def = pygame.Rect(0, 0, 1, 1)
-        r_def.center = (WIDTH / 2, HEIGHT / 2)
-        an = Anim(self, 0, 0, "scale Y up 4", r_def, on_start={"_visible": True}, shape="text", text="3", text_color=AQUA)
+        #r_def.center = (WIDTH / 2, HEIGHT / 2)
+        an = Anim(self, 0, 0, "scale XY up for text", r_def, on_start={"_visible": True}, shape="text", text="3", text_color=AQUA, scale_text_end=25)
         an.scaleX(30, 4)
         an.scaleY(28, 4)
         self._anim.add_animation_sequence(an)
@@ -98,7 +103,8 @@ class Eye:
         self._interval = Interval(5, self.make_blink, args=[])
         self._interval.start()
 
-        self._anim.set_current_animation_sequence([0, 1, 2, 3, 4, 6, 7, 8])
+        self._anim.set_current_animation_sequence([8])
+        #self._anim.set_current_animation_sequence([0, 1, 2, 3, 4, 6, 7, 8])
         self._anim.get_current_animation().play()
 
 
@@ -121,9 +127,6 @@ class Eye:
             if self._anim.get_current_animation()._shape == "rect":
                 pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
             elif self._anim.get_current_animation()._shape == "text":
-
-
-
-                print(self._rect)
+                #print(self._rect)
                 self._screen.blit(self._anim.get_current_animation()._textsurface, (self._rect.left, self._rect.top))
 

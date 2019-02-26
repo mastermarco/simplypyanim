@@ -31,6 +31,8 @@ def main():
     global eye_right
     r = pygame.Rect(0, 0, 30, 1)
     r.center = (WIDTH/2, HEIGHT/2)
+    print(r.center)
+    print(WIDTH/2, HEIGHT/2)
     eye_right = Eye(r, 2.5, AQUA, True, screen, padding=[20, 0, 0, 0])
 
     fps = ""
