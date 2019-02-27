@@ -66,6 +66,8 @@ class Anim:
             if self._obj_rect is None:
                 self.resetRect()
                 self.onStart()
+                if self._shape == "text":
+                    self.set_text_rect()
             self._is_play = True
             if not self._stay:
                 if self._movex and not self._movex_end:
@@ -87,12 +89,15 @@ class Anim:
                         self._total_animations -= 1
                         self._movey_end = True
                 if self._scalex and not self._scalex_end:
+                    print(self._finalScaleX, self._obj._rect[2], self._scalex_vel_tmp)
                     if self._scalex_vel is None:
-                        self._scalex_vel = self._scalex_vel_tmp if self._finalScaleX > self._obj._rect[2] else -self._scalex_vel_tmp
+                        self._scalex_vel = self._scalex_vel_tmp if self._finalScaleX >= self._obj._rect[2] else -self._scalex_vel_tmp
 
                     if self._shape == "text":
                         self._scale_text = self._scale_text + 1
                         self.set_text_rect(self._scale_text, self._scalex_vel)
+                        self._obj_rect[0] = WIDTH/2 - self._obj_rect[2] / 2
+                        print("-->", self._obj_rect[0])
                     else:
                         self._obj_rect[2] += self._scalex_vel
                         self._obj_rect[0] -= self._scalex_vel/2
@@ -100,15 +105,18 @@ class Anim:
                     if (self._scalex_vel > 0 and self._obj_rect[2] >= self._finalScaleX) or \
                             (self._scalex_vel < 0 and self._obj_rect[2] <= self._finalScaleX):
                         self._obj_rect[2] = self._finalScaleX
+                        #if self._shape == "text":
+                            #self._obj_rect[0] = WIDTH / 2 - self._obj_rect[2] / 2
                         self._total_animations -= 1
                         self._scalex_end = True
                 if self._scaley and not self._scaley_end:
                     if self._scaley_vel is None:
-                        self._scaley_vel = self._scaley_vel_tmp if self._finalScaleY > self._obj._rect[3] else -self._scaley_vel_tmp
+                        self._scaley_vel = self._scaley_vel_tmp if self._finalScaleY >= self._obj._rect[3] else -self._scaley_vel_tmp
 
                     if self._shape == "text":
                         self._scale_text = self._scale_text + 1
                         self.set_text_rect(self._scale_text, self._scaley_vel)
+                        self._obj_rect[1] = HEIGHT / 2 - self._obj_rect[3] / 2
                     else:
                         self._obj_rect[3] += self._scaley_vel
                         self._obj_rect[1] -= self._scaley_vel/2
@@ -120,10 +128,6 @@ class Anim:
                         self._scaley_end = True
             #else:
                 #print("stay")
-            print(self._name, self._obj_rect)
-            print(self._scalex, self._scalex_end, self._scalex_vel, self._finalScaleX)
-            print(self._scaley, self._scaley_end, self._scaley_vel, self._finalScaleY)
-
             self._obj.set_rect(self._obj_rect)
         if self._total_animations == 0 and not self._stay:
             # handle if need to wait or loop or it's ended
@@ -186,14 +190,15 @@ class Anim:
     def set_text_size(self, fntsize):
         self._obj._font = self._obj.set_font_size(fntsize)
         self._textsurface = self._obj._font.render(self._text, False, self._text_color)
-        print(self._text, fntsize, self._textsurface.get_width())
 
     def set_text_rect(self, fntsize, vel):
         self.set_text_size(fntsize)
         self._text_rect[0] = self._obj._rect.left = self._text_rect[0] - self._textsurface.get_width() / 2
         self._text_rect[1] = self._obj._rect.top = self._text_rect[1] - self._textsurface.get_height() / 2
-        self._obj._rect.width = self._textsurface.get_width()
-        self._obj._rect.height = self._textsurface.get_height()
+        #self._obj._rect.width = self._textsurface.get_width()
+        #self._obj._rect.height = self._textsurface.get_height()
+        self._obj_rect[2] = self._textsurface.get_width()
+        self._obj_rect[3] = self._textsurface.get_height()
 
     def resetRect(self):
         if self._shape == "rect":
@@ -243,10 +248,8 @@ class Anim:
         self._scalex = True
         # simulare dimensione finale testo quando raggiunta la dimensione finale
         if self._shape == "text":
-            print("end", self._scale_text_end)
             self.set_text_size(self._scale_text_end)
             self._finalScaleX = self._textsurface.get_width()
-            print("scale-->", self._textsurface.get_width())
         else:
             self._finalScaleX = finalSizeX
         self._total_animations += 1

@@ -127,6 +127,6 @@ class Eye:
             if self._anim.get_current_animation()._shape == "rect":
                 pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
             elif self._anim.get_current_animation()._shape == "text":
-                #print(self._rect)
+                print(self._rect)
                 self._screen.blit(self._anim.get_current_animation()._textsurface, (self._rect.left, self._rect.top))
 
