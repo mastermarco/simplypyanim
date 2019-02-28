@@ -100,6 +100,14 @@ class Eye:
         an.scaleY(28, 4)
         self._anim.add_animation_sequence(an)
 
+        # Animation 9
+        r_def = None
+        r_def = pygame.Rect(self._rect.left, self._rect.top, 1, 1)
+        an = Anim(self, 0, 1, "forbice", r_def, shape="image", image_file_name="forbice.png")
+        an.scaleX(84, 4)
+        an.scaleY(84, 4)
+        self._anim.add_animation_sequence(an)
+
         self._interval = Interval(5, self.make_blink, args=[])
         self._interval.start()
 
@@ -107,6 +115,11 @@ class Eye:
         #self._anim.set_current_animation_sequence([0, 1, 2, 3, 4, 6, 7, 8])
         self._anim.get_current_animation().play()
 
+    def load_image(self, image_path):
+        return pygame.image.load(image_path).convert_alpha()
+
+    def set_image_size(self, image_surface, size):
+        return pygame.transform.scale(image_surface, size)
 
     def make_blink(self):
         if self._status == eye_status.waiting:
@@ -127,6 +140,11 @@ class Eye:
             if self._anim.get_current_animation()._shape == "rect":
                 pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
             elif self._anim.get_current_animation()._shape == "text":
-                print(self._rect)
                 self._screen.blit(self._anim.get_current_animation()._textsurface, (self._rect.left, self._rect.top))
+            elif self._anim.get_current_animation()._shape == "image":
+                tmp = self.set_image_size(self._anim.get_current_animation()._image_surface, (self._rect.width, self._rect.height))
+                self._screen.blit(tmp, self._rect)
+            pygame.display.flip()
+
+        print(self._rect, self._rect.width, self._rect.height)
 

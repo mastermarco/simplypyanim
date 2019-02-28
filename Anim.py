@@ -2,7 +2,7 @@ from datetime import datetime
 from Config import *
 
 class Anim:
-    def __init__(self, obj, loops, wait, name, rect, shape="rect", text="", on_start={}, on_end={}, text_color="", scale_text_end=None):
+    def __init__(self, obj, loops, wait, name, start_rect, shape="rect", text="", on_start={}, on_end={}, text_color="", scale_text_end=None, image_file_name=None):
         self._shape = shape
         self._text = text
         self._textsurface = None
@@ -10,7 +10,7 @@ class Anim:
         self._obj = obj
         self._obj_rect = None
         self._obj_rect_backup = None
-        self._text_rect = list(rect)
+        self._start_rect = list(start_rect)
         self._loops = loops
         self._loops_step = 0
         self._wait = wait * 1000
@@ -61,13 +61,17 @@ class Anim:
         self._on_start = dict(on_start)
         self._on_end = dict(on_end)
 
+        self._image_surface = None
+        if not image_file_name is None:
+            self._image_surface = self._obj.load_image(image_file_name)
+
     def play(self):
         if not self._is_ended:
             if self._obj_rect is None:
                 self.resetRect()
                 self.onStart()
                 if self._shape == "text":
-                    self.set_text_rect()
+                    self.set_start_rect()
             self._is_play = True
             if not self._stay:
                 if self._movex and not self._movex_end:
@@ -89,15 +93,13 @@ class Anim:
                         self._total_animations -= 1
                         self._movey_end = True
                 if self._scalex and not self._scalex_end:
-                    print(self._finalScaleX, self._obj._rect[2], self._scalex_vel_tmp)
                     if self._scalex_vel is None:
                         self._scalex_vel = self._scalex_vel_tmp if self._finalScaleX >= self._obj._rect[2] else -self._scalex_vel_tmp
 
                     if self._shape == "text":
                         self._scale_text = self._scale_text + 1
-                        self.set_text_rect(self._scale_text, self._scalex_vel)
+                        self.set_start_rect(self._scale_text, self._scalex_vel)
                         self._obj_rect[0] = WIDTH/2 - self._obj_rect[2] / 2
-                        print("-->", self._obj_rect[0])
                     else:
                         self._obj_rect[2] += self._scalex_vel
                         self._obj_rect[0] -= self._scalex_vel/2
@@ -115,7 +117,7 @@ class Anim:
 
                     if self._shape == "text":
                         self._scale_text = self._scale_text + 1
-                        self.set_text_rect(self._scale_text, self._scaley_vel)
+                        self.set_start_rect(self._scale_text, self._scaley_vel)
                         self._obj_rect[1] = HEIGHT / 2 - self._obj_rect[3] / 2
                     else:
                         self._obj_rect[3] += self._scaley_vel
@@ -191,14 +193,15 @@ class Anim:
         self._obj._font = self._obj.set_font_size(fntsize)
         self._textsurface = self._obj._font.render(self._text, False, self._text_color)
 
-    def set_text_rect(self, fntsize, vel):
-        self.set_text_size(fntsize)
-        self._text_rect[0] = self._obj._rect.left = self._text_rect[0] - self._textsurface.get_width() / 2
-        self._text_rect[1] = self._obj._rect.top = self._text_rect[1] - self._textsurface.get_height() / 2
-        #self._obj._rect.width = self._textsurface.get_width()
-        #self._obj._rect.height = self._textsurface.get_height()
-        self._obj_rect[2] = self._textsurface.get_width()
-        self._obj_rect[3] = self._textsurface.get_height()
+    def set_start_rect(self, fntsize, vel):
+        if self._shape == "text":
+            self.set_text_size(fntsize)
+            self._start_rect[0] = self._obj._rect.left = self._start_rect[0] - self._textsurface.get_width() / 2
+            self._start_rect[1] = self._obj._rect.top = self._start_rect[1] - self._textsurface.get_height() / 2
+            #self._obj._rect.width = self._textsurface.get_width()
+            #self._obj._rect.height = self._textsurface.get_height()
+            self._obj_rect[2] = self._textsurface.get_width()
+            self._obj_rect[3] = self._textsurface.get_height()
 
     def resetRect(self):
         if self._shape == "rect":
@@ -209,6 +212,10 @@ class Anim:
             self._scale_text = 1
             self.set_text_size(self._scale_text)
             self._obj_rect = [self._obj._rect.left, self._obj._rect.top, 1, 1]
+        elif self._shape == "image":
+            self._obj_rect_backup = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
+            self._obj_rect = self._start_rect
+            print(self._obj_rect)
 
     def resetObj(self):
         # used for loop so it need to reset the original rect
