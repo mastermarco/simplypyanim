@@ -95,7 +95,7 @@ class Eye:
         r_def = None
         r_def = pygame.Rect(0, 0, 1, 1)
         #r_def.center = (WIDTH / 2, HEIGHT / 2)
-        an = Anim(self, 0, 0, "scale XY up for text", r_def, on_start={"_visible": True}, shape="text", text="3", text_color=AQUA, scale_text_end=25)
+        an = Anim(self, 0, 3, "scale XY up for text", r_def, on_start={"_visible": True}, shape="text", text="3", text_color=AQUA, scale_text_end=55)
         an.scaleX(30, 4)
         an.scaleY(28, 4)
         self._anim.add_animation_sequence(an)
@@ -111,8 +111,8 @@ class Eye:
         self._interval = Interval(5, self.make_blink, args=[])
         self._interval.start()
 
-        self._anim.set_current_animation_sequence([8])
-        #self._anim.set_current_animation_sequence([0, 1, 2, 3, 4, 6, 7, 8])
+        #self._anim.set_current_animation_sequence([8])
+        self._anim.set_current_animation_sequence([0, 1, 2, 3, 4, 6, 7, 8, 9])
         self._anim.get_current_animation().play()
 
     def load_image(self, image_path):
@@ -146,5 +146,4 @@ class Eye:
                 self._screen.blit(tmp, self._rect)
             pygame.display.flip()
 
-        print(self._rect, self._rect.width, self._rect.height)
 

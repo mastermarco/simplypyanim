@@ -71,7 +71,7 @@ class Anim:
                 self.resetRect()
                 self.onStart()
                 if self._shape == "text":
-                    self.set_start_rect()
+                    self.set_start_rect(self._scale_text_end, 1)
             self._is_play = True
             if not self._stay:
                 if self._movex and not self._movex_end:
@@ -215,7 +215,6 @@ class Anim:
         elif self._shape == "image":
             self._obj_rect_backup = [self._obj._rect.left, self._obj._rect.top, self._obj._rect.width, self._obj._rect.height]
             self._obj_rect = self._start_rect
-            print(self._obj_rect)
 
     def resetObj(self):
         # used for loop so it need to reset the original rect
