@@ -13,7 +13,7 @@ eye_status = enum(setOpen=1, stayOpen=2, waiting=3, setClose=4, stayClose=5)
 
 
 class Eye:
-    def __init__(self, rect, radius, color, isright, screen, padding=[], status=""):
+    def __init__(self, rect, radius, color, isright, screen, visible=False, padding=[0,0,0,0], status=""):
         self._screen = screen
         self._padding = list(padding)
         # Object Rect
@@ -27,10 +27,10 @@ class Eye:
         self._color = color
         self._frame = 0
         self._is_right = isright
-        self._anim = AnimationSequence()
+        self._anim = AnimationSequence(self)
         self._status = status
         self._interval = None
-        self._visible = True
+        self._visible = visible
         self._font = self.set_font_size(1)
 
         self.set_up_animations()
@@ -108,11 +108,17 @@ class Eye:
         an.scaleY(84, 4)
         self._anim.add_animation_sequence(an)
 
+
+    def set_up_blinking(self):
         self._interval = Interval(5, self.make_blink, args=[])
         self._interval.start()
 
-        #self._anim.set_current_animation_sequence([8])
-        self._anim.set_current_animation_sequence([0, 1, 2, 3, 4, 6, 7, 8, 9])
+    def set_up_sequence(self, sequence):
+        # self._anim.set_current_animation_sequence([8])
+        self._anim.set_current_animation_sequence(sequence)
+
+    def play_sequence(self):
+        self._visible = True
         self._anim.get_current_animation().play()
 
     def load_image(self, image_path):
@@ -123,15 +129,17 @@ class Eye:
 
     def make_blink(self):
         if self._status == eye_status.waiting:
-            self._anim.set_current_animation_sequence([1, 2, 3, 4, 5])
+            self._anim.set_current_animation_sequence([1, 2, 3, 4])
             self._status = eye_status.setOpen
             self._anim.get_current_animation().play()
 
     def draw(self):
         if self._anim.is_play():
             if self._anim.get_current_animation()._is_ended:
+                # ended
                 self._anim.handle_next_animation()
             else:
+                # continue to play the current animation because is no eneded
                 self._anim.get_current_animation().play()
         else:
             self._anim.handle_next_animation()
@@ -144,6 +152,9 @@ class Eye:
             elif self._anim.get_current_animation()._shape == "image":
                 tmp = self.set_image_size(self._anim.get_current_animation()._image_surface, (self._rect.width, self._rect.height))
                 self._screen.blit(tmp, self._rect)
-            pygame.display.flip()
 
+
+    def animation_sequence_ends(self):
+        # all sequences end
+        self._status = eye_status.waiting
 

@@ -66,87 +66,88 @@ class Anim:
             self._image_surface = self._obj.load_image(image_file_name)
 
     def play(self):
-        if not self._is_ended:
-            if self._obj_rect is None:
-                self.resetRect()
-                self.onStart()
-                if self._shape == "text":
-                    self.set_start_rect(self._scale_text_end, 1)
-            self._is_play = True
-            if not self._stay:
-                if self._movex and not self._movex_end:
-                    if self._movex_vel is None:
-                        self._movex_vel = self._movex_vel_tmp if self._finalX > self._obj._rect[0] else -self._movex_vel_tmp
-                    self._obj_rect[0] += self._movex_vel
-                    if (self._movex_vel > 0 and self._obj_rect[0] >= self._finalX) or \
-                            (self._movex_vel < 0 and self._obj_rect[0] <= self._finalX):
-                        self._obj_rect[0] = self._finalX
-                        self._total_animations -= 1
-                        self._movex_end = True
-                if self._movey and not self._movey_end:
-                    if self._movey_vel is None:
-                        self._movey_vel = self._movey_vel_tmp if self._finalY > self._obj._rect[1] else -self._movey_vel_tmp
-                    self._obj_rect[1] += self._movey_vel
-                    if (self._movey_vel > 0 and self._obj_rect[1] >= self._finalY) or \
-                            (self._movey_vel < 0 and self._obj_rect[1] <= self._finalY):
-                        self._obj_rect[1] = self._finalY
-                        self._total_animations -= 1
-                        self._movey_end = True
-                if self._scalex and not self._scalex_end:
-                    if self._scalex_vel is None:
-                        self._scalex_vel = self._scalex_vel_tmp if self._finalScaleX >= self._obj._rect[2] else -self._scalex_vel_tmp
-
+        if self._obj._visible:
+            if not self._is_ended:
+                if self._obj_rect is None:
+                    self.resetRect()
+                    self.onStart()
                     if self._shape == "text":
-                        self._scale_text = self._scale_text + 1
-                        self.set_start_rect(self._scale_text, self._scalex_vel)
-                        self._obj_rect[0] = WIDTH/2 - self._obj_rect[2] / 2
-                    else:
-                        self._obj_rect[2] += self._scalex_vel
-                        self._obj_rect[0] -= self._scalex_vel/2
+                        self.set_start_rect(self._scale_text_end, 1)
+                self._is_play = True
+                if not self._stay:
+                    if self._movex and not self._movex_end:
+                        if self._movex_vel is None:
+                            self._movex_vel = self._movex_vel_tmp if self._finalX > self._obj._rect[0] else -self._movex_vel_tmp
+                        self._obj_rect[0] += self._movex_vel
+                        if (self._movex_vel > 0 and self._obj_rect[0] >= self._finalX) or \
+                                (self._movex_vel < 0 and self._obj_rect[0] <= self._finalX):
+                            self._obj_rect[0] = self._finalX
+                            self._total_animations -= 1
+                            self._movex_end = True
+                    if self._movey and not self._movey_end:
+                        if self._movey_vel is None:
+                            self._movey_vel = self._movey_vel_tmp if self._finalY > self._obj._rect[1] else -self._movey_vel_tmp
+                        self._obj_rect[1] += self._movey_vel
+                        if (self._movey_vel > 0 and self._obj_rect[1] >= self._finalY) or \
+                                (self._movey_vel < 0 and self._obj_rect[1] <= self._finalY):
+                            self._obj_rect[1] = self._finalY
+                            self._total_animations -= 1
+                            self._movey_end = True
+                    if self._scalex and not self._scalex_end:
+                        if self._scalex_vel is None:
+                            self._scalex_vel = self._scalex_vel_tmp if self._finalScaleX >= self._obj._rect[2] else -self._scalex_vel_tmp
 
-                    if (self._scalex_vel > 0 and self._obj_rect[2] >= self._finalScaleX) or \
-                            (self._scalex_vel < 0 and self._obj_rect[2] <= self._finalScaleX):
-                        self._obj_rect[2] = self._finalScaleX
-                        #if self._shape == "text":
-                            #self._obj_rect[0] = WIDTH / 2 - self._obj_rect[2] / 2
-                        self._total_animations -= 1
-                        self._scalex_end = True
-                if self._scaley and not self._scaley_end:
-                    if self._scaley_vel is None:
-                        self._scaley_vel = self._scaley_vel_tmp if self._finalScaleY >= self._obj._rect[3] else -self._scaley_vel_tmp
+                        if self._shape == "text":
+                            self._scale_text = self._scale_text + 1
+                            self.set_start_rect(self._scale_text, self._scalex_vel)
+                            self._obj_rect[0] = WIDTH/2 - self._obj_rect[2] / 2
+                        else:
+                            self._obj_rect[2] += self._scalex_vel
+                            self._obj_rect[0] -= self._scalex_vel/2
 
-                    if self._shape == "text":
-                        self._scale_text = self._scale_text + 1
-                        self.set_start_rect(self._scale_text, self._scaley_vel)
-                        self._obj_rect[1] = HEIGHT / 2 - self._obj_rect[3] / 2
-                    else:
-                        self._obj_rect[3] += self._scaley_vel
-                        self._obj_rect[1] -= self._scaley_vel/2
+                        if (self._scalex_vel > 0 and self._obj_rect[2] >= self._finalScaleX) or \
+                                (self._scalex_vel < 0 and self._obj_rect[2] <= self._finalScaleX):
+                            self._obj_rect[2] = self._finalScaleX
+                            #if self._shape == "text":
+                                #self._obj_rect[0] = WIDTH / 2 - self._obj_rect[2] / 2
+                            self._total_animations -= 1
+                            self._scalex_end = True
+                    if self._scaley and not self._scaley_end:
+                        if self._scaley_vel is None:
+                            self._scaley_vel = self._scaley_vel_tmp if self._finalScaleY >= self._obj._rect[3] else -self._scaley_vel_tmp
 
-                    if (self._scaley_vel > 0 and self._obj_rect[3] >= self._finalScaleY) or \
-                            (self._scaley_vel < 0 and self._obj_rect[3] <= self._finalScaleY):
-                        self._obj_rect[3] = self._finalScaleY
-                        self._total_animations -= 1
-                        self._scaley_end = True
-            #else:
-                #print("stay")
-            self._obj.set_rect(self._obj_rect)
-        if self._total_animations == 0 and not self._stay:
-            # handle if need to wait or loop or it's ended
-            if not self._is_ended and self._wait > 0 and self._wait_steps == 0:
-                self._wait_steps = datetime.now()
-            elif not self._is_ended and self._wait > 0 and self.millis() < self._wait:
-                self._waiting = True
-            elif not self._is_ended and self._wait > 0 and self._waiting and self.millis() >= self._wait:
-                self._waiting = False
-                self._end_wait = True
-            elif not self._is_ended and self._loops > 0 and self._loops_step < self._loops:
-                self._loops_step += 1
-                self.resetObj()
-                self.resetAnim()
-            else:
-                self.endAnimation()
-                self.resetAnim()
+                        if self._shape == "text":
+                            self._scale_text = self._scale_text + 1
+                            self.set_start_rect(self._scale_text, self._scaley_vel)
+                            self._obj_rect[1] = HEIGHT / 2 - self._obj_rect[3] / 2
+                        else:
+                            self._obj_rect[3] += self._scaley_vel
+                            self._obj_rect[1] -= self._scaley_vel/2
+
+                        if (self._scaley_vel > 0 and self._obj_rect[3] >= self._finalScaleY) or \
+                                (self._scaley_vel < 0 and self._obj_rect[3] <= self._finalScaleY):
+                            self._obj_rect[3] = self._finalScaleY
+                            self._total_animations -= 1
+                            self._scaley_end = True
+                #else:
+                    #print("stay")
+                self._obj.set_rect(self._obj_rect)
+            if self._total_animations == 0 and not self._stay:
+                # handle if need to wait or loop or it's ended
+                if not self._is_ended and self._wait > 0 and self._wait_steps == 0:
+                    self._wait_steps = datetime.now()
+                elif not self._is_ended and self._wait > 0 and self.millis() < self._wait:
+                    self._waiting = True
+                elif not self._is_ended and self._wait > 0 and self._waiting and self.millis() >= self._wait:
+                    self._waiting = False
+                    self._end_wait = True
+                elif not self._is_ended and self._loops > 0 and self._loops_step < self._loops:
+                    self._loops_step += 1
+                    self.resetObj()
+                    self.resetAnim()
+                else:
+                    self.endAnimation()
+                    self.resetAnim()
 
     def onStart(self):
         if len(self._on_start):

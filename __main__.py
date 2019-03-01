@@ -24,14 +24,28 @@ screen = pygame.display.set_mode(size)
 
 #pygame.display.set_caption("My Game")
 
-eye_right = None
-
 
 def main():
-    global eye_right
     r = pygame.Rect(0, 0, 30, 1)
     r.center = (WIDTH/2, HEIGHT/2)
-    eye_right = Eye(r, 2.5, AQUA, True, screen, padding=[20, 0, 0, 0])
+    eye_right = Eye(r, 2.5, AQUA, True, screen, padding=[30, 0, 0, 0])
+    eye_right.set_up_sequence([0, 1, 2, 3, 4])
+
+    r = pygame.Rect(0, 0, 30, 1)
+    r.center = (WIDTH / 2, HEIGHT / 2)
+    eye_left = Eye(r, 2.5, AQUA, False, screen, padding=[-20, 0, 0, 0])
+    eye_left.set_up_sequence([0, 1, 2, 3, 4])
+
+    r = pygame.Rect(0, 0, 30, 1)
+    r.center = (WIDTH / 2, HEIGHT / 2)
+    central = Eye(r, 2.5, AQUA, True, screen, visible=False)
+    central.set_up_sequence([8, 9])
+
+    eye_right.play_sequence()
+    eye_right.set_up_blinking()
+
+    eye_left.play_sequence()
+    eye_left.set_up_blinking()
 
     fps = ""
     #canvas = luma.core.render.canvas(screen)
@@ -39,13 +53,23 @@ def main():
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                eye_right._interval.stop()
+                if not eye_right._interval is None:
+                    eye_right._interval.stop()
+                if not eye_left._interval is None:
+                    eye_left._interval.stop()
                 return True
 
         screen.fill(BLACK)
-        eye_right.draw()
-        pygame.display.flip()
+        if eye_right._visible:
+            eye_right.draw()
 
+        if eye_left._visible:
+            eye_left.draw()
+
+        if central._visible:
+            central.draw()
+
+        pygame.display.flip()
         # --- Limit to 60 frames per second
         clock.tick(60)
     return False

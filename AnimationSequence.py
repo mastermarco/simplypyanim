@@ -2,12 +2,13 @@ from pprint import pprint
 
 
 class AnimationSequence:
-    def __init__(self):
+    def __init__(self, obj):
         self._animation_sequence = []
         self._current_animation = -1
         self._ended = False
         self._animation_sequence_array = []
         self._animation_sequence_array_index = -1
+        self._obj = obj
 
     def add_animation_sequence(self, anim):
         self._animation_sequence.append(anim)
@@ -19,7 +20,7 @@ class AnimationSequence:
         self._current_animation = num
 
     def set_current_animation_by_name(self, name):
-        # it find the animation with name and play till the end
+        # it finds the animation with name and play till the end
         curranim = self.get_current_animation()
         if not curranim is None:
             curranim.reset()
@@ -40,12 +41,10 @@ class AnimationSequence:
         self._animation_sequence_array_index = 0
         self.set_current_animation(lst[self._animation_sequence_array_index])
         curranim = self.get_current_animation()
-        #print("_obj_rect_default", curranim._obj_rect_default)
-        #curranim._obj_rect = curranim._obj_rect_default
-        #curranim._obj_rect_backup = [curranim._obj._rect.left, curranim._obj._rect.top, curranim._obj._rect.width, curranim._obj._rect.height]
         curranim._is_ended = False
         curranim.resetRect()
         #pprint(vars(curranim), indent=2)
+
 
     def handle_next_animation(self):
         curranim = self.get_current_animation()
@@ -58,7 +57,10 @@ class AnimationSequence:
                 an._is_ended = False
                 #an.resetRect()
                 an.play()
+        else:
+            self._obj.animation_sequence_ends()
 
+    '''
     def go_next_animation(self):
         if self._current_animation + 1 < len(self._animation_sequence):
             self.set_current_animation(self._current_animation + 1)
@@ -67,7 +69,7 @@ class AnimationSequence:
             self._current_animation = 0
             self._ended = False
             return False
-
+    '''
     def go_next_animation_sequence(self):
         if self._animation_sequence_array_index + 1 < len(self._animation_sequence_array):
             self._animation_sequence_array_index += 1
