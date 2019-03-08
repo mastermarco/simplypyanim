@@ -29,12 +29,12 @@ def main():
     r = pygame.Rect(0, 0, 30, 1)
     r.center = (WIDTH/2, HEIGHT/2)
     eye_right = Eye(r, 2.5, AQUA, True, screen, padding=[30, 0, 0, 0])
-    eye_right.set_up_sequence([0, 1, 2, 3, 4])
+    eye_right.set_up_sequence([0, 1, 2, 3, 4, 10, 12, 14])
 
     r = pygame.Rect(0, 0, 30, 1)
     r.center = (WIDTH / 2, HEIGHT / 2)
     eye_left = Eye(r, 2.5, AQUA, False, screen, padding=[-20, 0, 0, 0])
-    eye_left.set_up_sequence([0, 1, 2, 3, 4])
+    eye_left.set_up_sequence([0, 1, 2, 3, 4, 11, 13, 15])
 
     r = pygame.Rect(0, 0, 30, 1)
     r.center = (WIDTH / 2, HEIGHT / 2)

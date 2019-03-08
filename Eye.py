@@ -102,12 +102,48 @@ class Eye:
 
         # Animation 9
         r_def = None
-        r_def = pygame.Rect(self._rect.left, self._rect.top, 1, 1)
-        an = Anim(self, 0, 1, "forbice", r_def, shape="image", image_file_name="forbice.png")
-        an.scaleX(84, 4)
-        an.scaleY(84, 4)
+        r_def = pygame.Rect(self._rect.left-5, self._rect.top, 40, 1)
+        #r_def = pygame.Rect(self._rect.left, self._rect.top, 1, 1)
+        an = Anim(self, 4, 1, "forbice", r_def, shape="image", image_file_name="heart.png")
+        #an.scaleX(30, 4)
+        an.scaleY(40, 6)
         self._anim.add_animation_sequence(an)
 
+        # Animation 10 (RIGHT on right)
+        #r_def = pygame.Rect(self._rect.left, self._rect.top, 30, 2)
+        an = Anim(self, 0, 3, "right", r_def)
+        an.moveX(WIDTH-40, 4)
+        self._anim.add_animation_sequence(an)
+
+        # Animation 11 (LEFT on right)
+        #r_def = pygame.Rect(self._rect.left, self._rect.top, 30, 2)
+        an = Anim(self, 0, 3, "left", r_def)
+        an.moveX(WIDTH/2-10, 4)
+        self._anim.add_animation_sequence(an)
+
+        # Animation 12 (RIGHT center)
+        #r_def = pygame.Rect(self._rect.left, self._rect.top, 30, 2)
+        an = Anim(self, 0, 3, "right back", r_def)
+        an.moveX(125, 4)
+        self._anim.add_animation_sequence(an)
+
+        # Animation 13 (LEFT center)
+        #r_def = pygame.Rect(self._rect.left, self._rect.top, 30, 2)
+        an = Anim(self, 0, 3, "left back", r_def)
+        an.moveX(45, 4)
+        self._anim.add_animation_sequence(an)
+
+        # Animation 14 (RIGHT go left)
+        #r_def = pygame.Rect(self._rect.left, self._rect.top, 30, 2)
+        an = Anim(self, 0, 3, "right back", r_def)
+        an.moveX(80, 4)
+        self._anim.add_animation_sequence(an)
+
+        # Animation 15 (LEFT go left)
+        #r_def = pygame.Rect(self._rect.left, self._rect.top, 30, 2)
+        an = Anim(self, 0, 3, "left back", r_def)
+        an.moveX(20, 4)
+        self._anim.add_animation_sequence(an)
 
     def set_up_blinking(self):
         self._interval = Interval(5, self.make_blink, args=[])
@@ -152,7 +188,6 @@ class Eye:
             elif self._anim.get_current_animation()._shape == "image":
                 tmp = self.set_image_size(self._anim.get_current_animation()._image_surface, (self._rect.width, self._rect.height))
                 self._screen.blit(tmp, self._rect)
-
 
     def animation_sequence_ends(self):
         # all sequences end

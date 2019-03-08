@@ -70,6 +70,8 @@ class Anim:
             if not self._is_ended:
                 if self._obj_rect is None:
                     self.resetRect()
+                    if self._name == "left":
+                        print(self._obj_rect)
                     self.onStart()
                     if self._shape == "text":
                         self.set_start_rect(self._scale_text_end, 1)
@@ -77,16 +79,27 @@ class Anim:
                 if not self._stay:
                     if self._movex and not self._movex_end:
                         if self._movex_vel is None:
-                            self._movex_vel = self._movex_vel_tmp if self._finalX > self._obj._rect[0] else -self._movex_vel_tmp
-                        self._obj_rect[0] += self._movex_vel
+                            self._movex_vel = self._movex_vel_tmp
+                            self._movex_start = self._obj._rect[0]
+                            if self._name == "left":
+                                print("ok", self._movex_start, self._finalX)
+
+                        if self._movex_start > self._finalX:
+                            self._obj_rect[0] -= self._movex_vel
+                        else:
+                            self._obj_rect[0] += self._movex_vel
                         if (self._movex_vel > 0 and self._obj_rect[0] >= self._finalX) or \
                                 (self._movex_vel < 0 and self._obj_rect[0] <= self._finalX):
                             self._obj_rect[0] = self._finalX
                             self._total_animations -= 1
                             self._movex_end = True
+                        if self._name == "left":
+                            print(self._obj_rect[0])
                     if self._movey and not self._movey_end:
                         if self._movey_vel is None:
-                            self._movey_vel = self._movey_vel_tmp if self._finalY > self._obj._rect[1] else -self._movey_vel_tmp
+                            self._movey_vel = self._movey_vel_tmp
+                            self._movey_start = self._obj._rect[1]
+
                         self._obj_rect[1] += self._movey_vel
                         if (self._movey_vel > 0 and self._obj_rect[1] >= self._finalY) or \
                                 (self._movey_vel < 0 and self._obj_rect[1] <= self._finalY):
@@ -132,6 +145,8 @@ class Anim:
                 #else:
                     #print("stay")
                 self._obj.set_rect(self._obj_rect)
+                #if self._name == "right" or self._name == "pippo":
+                    #print(self._name, self._obj._rect, self._finalX)
             if self._total_animations == 0 and not self._stay:
                 # handle if need to wait or loop or it's ended
                 if not self._is_ended and self._wait > 0 and self._wait_steps == 0:
@@ -168,13 +183,16 @@ class Anim:
 
     def resetAnim(self, holdon=False):
         # TODO when the animation ends this function is called repeatedly, need to be called only once
+        self._obj_rect = None
         self._total_animations = self._total_animations_backup = 0
         self._movex_vel = None
         self._movey_vel = None
         self._scalex_vel = None
         self._scaley_vel = None
         self._movex_end = False
+        self._movex_start = False
         self._movey_end = False
+        self._movey_start = False
         self._scalex_end = False
         self._scaley_end = False
         self._stay = self._stay_backup
@@ -221,10 +239,11 @@ class Anim:
         # used for loop so it need to reset the original rect
         # this happen during the play when self._obj_rect is None
         # self._obj.set_rect(self._obj_rect_backup)
-        self._obj_rect[0] = self._obj_rect_backup[0]
-        self._obj_rect[1] = self._obj_rect_backup[1]
-        self._obj_rect[2] = self._obj_rect_backup[2]
-        self._obj_rect[3] = self._obj_rect_backup[3]
+        #self._obj_rect[0] = self._obj_rect_backup[0]
+        #self._obj_rect[1] = self._obj_rect_backup[1]
+        #self._obj_rect[2] = self._obj_rect_backup[2]
+        #self._obj_rect[3] = self._obj_rect_backup[3]
+        self._obj_rect = None
 
     def millis(self):
         dt = datetime.now() - self._wait_steps
