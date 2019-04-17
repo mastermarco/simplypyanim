@@ -25,14 +25,15 @@ class Eye:
     def draw(self):
         if self._animations._is_play:
             self._animations.draw_frames()
-            print(self._rect)
             pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
         else:
             pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
-            self._animations._is_play = True
+            self._animations.play()
 
     def set_position(self, x, y):
-        self._rect.move_ip(x, y)
+        #self._rect.move_ip(x, y)
+        self._rect.left = x
+        self._rect.top = y
 
     def set_position_x(self, x):
         self._rect.left = x

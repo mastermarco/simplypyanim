@@ -45,7 +45,6 @@ class AnimMove:
             if (self._x_end is None and self._y_current == self._y_end) or (self._y_end is None and self._x_current == self._x_end) or (self._y_current == self._y_end and self._y_current == self._y_end):
                 self.on_end()
             else:
-                '''print(self._x_current, self._x_end, self._velocity)'''
                 if self._x_direction_right:
                     self._x_current += self._velocity
                     if self._x_current > self._x_end:
@@ -67,7 +66,6 @@ class AnimMove:
             if self._x_end is None:
                 self._obj.set_position_y(self._y_current)
             elif self._y_end is None:
-                print("prova!!!!!!!", self._x_current, self._y_current)
                 self._obj.set_position_x(self._x_current)
             else:
                 self._obj.set_position(self._x_current, self._y_current)
