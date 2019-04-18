@@ -14,6 +14,7 @@ class AnimMove:
         self._x_direction_right = None
         self._y_direction_top = None
 
+        self._do_loop_back = False
         self._do_loop = False
         self._x_start_tmp = self._x_current_tmp = -1
         self._y_start_tmp = self._y_current_tmp = -1
@@ -24,6 +25,12 @@ class AnimMove:
         self._x_current = self._x_current_tmp = self._x_start
         self._y_current = self._y_current_tmp = self._y_start
 
+    def reset_for_loop_back(self):
+        self._x_end = self._x_start_tmp
+        self._y_end = self._y_start_tmp
+        self._x_direction_right = None
+        self._y_direction_top = None
+
     def reset(self):
         self._x_start = self._x_start_tmp
         self._y_start = self._y_start_tmp
@@ -31,7 +38,12 @@ class AnimMove:
         self._y_current = self._y_current_tmp
         self._x_direction_right = None
         self._y_direction_top = None
-        self._do_loop = False
+
+    def do_loop_back(self):
+        self._do_loop_back = True
+        self._has_started = False
+        self._is_play = False
+        self._has_ended = False
 
     def do_loop(self):
         self._do_loop = True
@@ -40,7 +52,9 @@ class AnimMove:
         self._has_ended = False
 
     def on_start(self):
-        if self._do_loop:
+        if self._do_loop_back:
+            self.reset_for_loop_back()
+        elif self._do_loop:
             self.reset()
         else:
             self.set_position_start()
@@ -95,5 +109,7 @@ class AnimMove:
     def on_end(self):
         self._is_play = False
         self._has_ended = True
+        self._do_loop_back = False
+        self._do_loop = False
         print("end!")
 

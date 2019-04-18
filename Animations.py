@@ -16,11 +16,11 @@ class Animations:
         anims = []
         anims.append(AnimMove(self._obj, 100, 20, 1))
         #anims.append(AnimMove(self._obj, 0, None, 1))
-        self.add_animations("move_left", anims, loops=5)
+        self.add_animations("move_left", anims, loop_back=True)
         anims.clear()
 
         anims.append(AnimMove(self._obj, 100, 80, 1))
-        self.add_animations("move_bottom", anims, wait_start=5, wait_end=5)
+        self.add_animations("move_bottom", anims, wait_start=1, loop_back=True, wait_end=5)
         anims.clear()
 
         anims.append(AnimMove(self._obj, 140, 10, 1))
