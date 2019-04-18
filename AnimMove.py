@@ -14,14 +14,36 @@ class AnimMove:
         self._x_direction_right = None
         self._y_direction_top = None
 
+        self._do_loop = False
+        self._x_start_tmp = self._x_current_tmp = -1
+        self._y_start_tmp = self._y_current_tmp = -1
+
     def set_position_start(self):
-        self._x_start = self._obj._rect.left
-        self._y_start = self._obj._rect.top
-        self._x_current = self._x_start
-        self._y_current = self._y_start
+        self._x_start = self._x_start_tmp = self._obj._rect.left
+        self._y_start = self._y_start_tmp = self._obj._rect.top
+        self._x_current = self._x_current_tmp = self._x_start
+        self._y_current = self._y_current_tmp = self._y_start
+
+    def reset(self):
+        self._x_start = self._x_start_tmp
+        self._y_start = self._y_start_tmp
+        self._x_current = self._x_current_tmp
+        self._y_current = self._y_current_tmp
+        self._x_direction_right = None
+        self._y_direction_top = None
+        self._do_loop = False
+
+    def do_loop(self):
+        self._do_loop = True
+        self._has_started = False
+        self._is_play = False
+        self._has_ended = False
 
     def on_start(self):
-        self.set_position_start()
+        if self._do_loop:
+            self.reset()
+        else:
+            self.set_position_start()
         self._is_play = True
         self._has_started = True
 

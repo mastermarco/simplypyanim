@@ -16,18 +16,18 @@ class Animations:
         anims = []
         anims.append(AnimMove(self._obj, 100, 20, 1))
         #anims.append(AnimMove(self._obj, 0, None, 1))
-        self.add_animations("move_left", anims)
+        self.add_animations("move_left", anims, loops=5)
         anims.clear()
 
         anims.append(AnimMove(self._obj, 100, 80, 1))
-        self.add_animations("move_bottom", anims)
+        self.add_animations("move_bottom", anims, wait_start=5, wait_end=5)
         anims.clear()
 
         anims.append(AnimMove(self._obj, 140, 10, 1))
         self.add_animations("move_right_top", anims)
 
-    def add_animations(self, name, anims):
-        tmp = AnimationSequence(name, self._obj)
+    def add_animations(self, name, anims, loops=0, wait_start=0, wait_end=0, loop_back=False):
+        tmp = AnimationSequence(name, self._obj, loops, wait_start, wait_end, loop_back)
         for anim in anims:
             tmp.add_anims(anim)
         self._sequences.append(tmp)
@@ -48,7 +48,6 @@ class Animations:
                 if anim._is_play:
                     anim.play()
                 elif not anim._has_played:
-                    anim.on_start()
                     anim.play()
             else:
                 print("Animation name not found")
