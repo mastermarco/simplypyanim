@@ -2,7 +2,7 @@ from Interval import *
 from Config import *
 from Colors import *
 from Animations import Animations
-from Anim import *
+#from Anim import *
 
 
 def enum(**enums):
@@ -19,15 +19,17 @@ class Eye:
         self._rect.center = center
         self._color = color
         self._visible = False
-        self._animations = Animations(self)
         self.set_position(x, y)
+        self._animations = Animations(self)
 
     def draw(self):
         if self._animations._is_play:
             self._animations.draw_frames()
-            pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
+            if self._visible:
+                pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
         else:
-            pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
+            if self._visible:
+                pygame.draw.rect(DISPLAYSURFACE, self._color, self._rect, 0)
             self._animations.play()
 
     def set_position(self, x, y):
@@ -40,5 +42,16 @@ class Eye:
 
     def set_position_y(self, y):
         self._rect.top = y
+
+    def set_scale(self, w, h):
+        #self._rect.move_ip(x, y)
+        self._rect.width = w
+        self._rect.height = h
+
+    def set_scale_x(self, w):
+        self._rect.width = w
+
+    def set_scale_y(self, h):
+        self._rect.height = h
 
 

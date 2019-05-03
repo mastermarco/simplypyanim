@@ -1,5 +1,6 @@
 from AnimationSequence import AnimationSequence
 from AnimMove import AnimMove
+from AnimScale import AnimScale
 
 
 class Animations:
@@ -9,12 +10,14 @@ class Animations:
         self._is_play = False
         self.setup_animations()
         self._frame_to_play = []
-        self.setup_frames_to_play(["move_left", "move_bottom", "move_right_top"])
+        #self.setup_frames_to_play(["move_left", "move_bottom", "move_right_top"])
+        self.setup_frames_to_play(["scale_move_left"])
         self._frame_current = -1
 
     def setup_animations(self):
         anims = []
-        anims.append(AnimMove(self._obj, 100, 20, 1))
+        ''' on anims you can .append every animations need to be executed at the same time by indexing on self.add_animations '''
+        '''anims.append(AnimMove(self._obj, 100, 20, 1))
         #anims.append(AnimMove(self._obj, 0, None, 1))
         self.add_animations("move_left", anims, loop_back=True)
         anims.clear()
@@ -24,7 +27,12 @@ class Animations:
         anims.clear()
 
         anims.append(AnimMove(self._obj, 140, 10, 1))
-        self.add_animations("move_right_top", anims)
+        self.add_animations("move_right_top", anims)'''
+        anims.append(AnimScale(self._obj, None, 10, 1))
+        anims.append(AnimMove(self._obj, 0, 0, 1))
+        print(self._obj._rect.left, self._obj._rect.top)
+        self.add_animations("scale_move_left", anims)
+        anims.clear()
 
     def add_animations(self, name, anims, loops=0, wait_start=0, wait_end=0, loop_back=False):
         tmp = AnimationSequence(name, self._obj, loops, wait_start, wait_end, loop_back)
