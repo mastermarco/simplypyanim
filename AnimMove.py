@@ -8,6 +8,9 @@ class AnimMove:
         self._x_end = x
         self._y_end = y
         self._velocity = velocity
+        self._velocity_x = None
+        self._velocity_y = None
+        self.set_velocity(x, y)
         self._is_play = False
         self._has_started = False
         self._has_ended = False
@@ -18,6 +21,31 @@ class AnimMove:
         self._do_loop = False
         self._x_start_tmp = self._x_current_tmp = -1
         self._y_start_tmp = self._y_current_tmp = -1
+
+    def set_velocity(self, x, y):
+        if x is None:
+            self._velocity_y = self._velocity
+        elif y is None:
+            self._velocity_x = self._velocity
+        else:
+            if x > self._obj._rect.left:
+                x_tmp = self._obj._rect.left - x
+            else:
+                x_tmp = x - self._obj._rect.left
+
+            if y > self._obj._rect.top:
+                y_tmp = self._obj._rect.top - y
+            else:
+                y_tmp = y - self._obj._rect.top
+
+            if x_tmp > y_tmp:
+                self._velocity_y = self._velocity * y_tmp/x_tmp
+                self._velocity_x = self._velocity
+            elif x_tmp < y_tmp:
+                self._velocity_x = self._velocity * x_tmp/y_tmp
+                self._velocity_y = self._velocity
+            else:
+                self._velocity_x = self._velocity_y = self._velocity
 
     def set_position_start(self):
         self._x_start = self._x_start_tmp = self._obj._rect.left
@@ -78,24 +106,25 @@ class AnimMove:
             self.on_start()
 
         if self._is_play:
-            if (self._x_end is None and self._y_current == self._y_end) or (self._y_end is None and self._x_current == self._x_end) or (self._y_current == self._y_end and self._y_current == self._y_end):
+            if self._x_end is None and self._y_current == self._y_end and self._y_end is None and \
+                    self._x_current == self._x_end or self._x_current == self._x_end and self._y_current == self._y_end:
                 self.on_end()
             else:
                 if self._x_direction_right:
-                    self._x_current += self._velocity
+                    self._x_current += self._velocity_x
                     if self._x_current > self._x_end:
                         self._x_current = self._x_end
                 elif not self._x_direction_right and not self._x_direction_right is None:
-                    self._x_current -= self._velocity
+                    self._x_current -= self._velocity_x
                     if self._x_current < self._x_end:
                         self._x_current = self._x_end
 
                 if self._y_direction_top:
-                    self._y_current -= self._velocity
+                    self._y_current -= self._velocity_y
                     if self._y_current < self._y_end:
                         self._y_current = self._y_end
                 elif not self._y_direction_top and not self._y_direction_top is None:
-                    self._y_current += self._velocity
+                    self._y_current += self._velocity_y
                     if self._y_current > self._y_end:
                         self._y_current = self._y_end
 

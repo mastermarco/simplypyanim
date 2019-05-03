@@ -23,10 +23,39 @@ class AnimationSequence:
         self._wait_end_tmp = 0
         self._end_time_tmp = 0
 
+        '''self._is_velocity_set = False'''
+
     def add_anims(self, anims):
         self._sequences.append(anims)
 
+    '''def set_velocity(self):
+        self._is_velocity_set = True
+        # loop trough all the animation to set up the single velocity
+        print("to do set velocity")
+        # first get the shorter one for x and h
+        velocity_x = 1000
+        velocity_y = 1000
+        for anim in self._sequences:
+            print(anim, anim._velocity_x, anim._velocity_y, velocity_x, velocity_y)
+            if not anim._velocity_x is None and anim._velocity_x < velocity_x:
+                print("x", anim._velocity_x, anim)
+                velocity_x = anim._velocity_x
+            if not anim._velocity_y is None and anim._velocity_y < velocity_y:
+                print("y", anim._velocity_y, anim)
+                velocity_y = anim._velocity_y
+        # then assign it to all
+        for anim in self._sequences:
+            if not anim._velocity_x is None:
+                anim._velocity_x = velocity_x
+            if not anim._velocity_y is None:
+                anim._velocity_y = velocity_y
+
+        print(velocity_x, velocity_y)'''
+
     def play(self):
+        '''if not self._is_velocity_set:
+            self.set_velocity()'''
+
         if not self._is_play:
             self.on_start()
 

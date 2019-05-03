@@ -28,7 +28,7 @@ class Animations:
 
         anims.append(AnimMove(self._obj, 140, 10, 1))
         self.add_animations("move_right_top", anims)'''
-        anims.append(AnimScale(self._obj, None, 10, 1))
+        anims.append(AnimScale(self._obj, None, 10, 0.4))
         anims.append(AnimMove(self._obj, 0, 0, 1))
         print(self._obj._rect.left, self._obj._rect.top)
         self.add_animations("scale_move_left", anims)
